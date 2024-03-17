@@ -1,0 +1,107 @@
+
+html, body{
+  height: 100%;
+}
+
+body{
+  background-image: linear-gradient(to right, #d6d1cd, 2px, transparent 2px), linear-gradient(to bottom, #d6d1cd, 2px, transparent 2px);
+  background-size: 100px 100px;
+  overflow: hidden;
+}
+
+* {
+  cursor: none !important;
+}
+
+#cursor{
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  top: 100px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: #080f0f 3px solid;
+
+  /* background-color: #080f0f; */
+  /* border-top: 5px solid #080f0f; */
+  /* border-left: 5px solid #080f0f; */
+  transform: scale(0);
+  transition: transform 0.1s ease-in-out;
+  /* animation: rotate 1s linear infinite; */
+}
+
+.effect{
+  position: absolute;
+  z-index: 1000;
+  background: #080f0f;
+  pointer-events: none;
+  border-radius: 50%;
+  /* border: #080f0f 3px solid; */
+  width: 20px;
+  height: 20px;
+  transition: 2s;
+  animation: redBlack 1s ease-out infinite;
+}
+
+html:hover #cursor{
+  transform: scale(1);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes redBlack{
+  100% ,0%{
+    background-color: #080f0f;
+  }
+  50%{
+    background-color: #ba1b1d;
+  }
+
+}
+
+@keyframes rainbow{
+  100%,0%{
+    background-color: rgb(255,0,0);
+  }
+  8%{
+    background-color: rgb(255,127,0);
+  }
+  16%{
+    background-color: rgb(255,255,0);
+  }
+  25%{
+    background-color: rgb(127,255,0);
+  }
+  33%{
+    background-color: rgb(0,255,0);
+  }
+  41%{
+    background-color: rgb(0,255,127);
+  }
+  50%{
+    background-color: rgb(0,255,255);
+  }
+  58%{
+    background-color: rgb(0,127,255);
+  }
+  66%{
+    background-color: rgb(0,0,255);
+  }
+  75%{
+    background-color: rgb(127,0,255);
+  }
+  83%{
+    background-color: rgb(255,0,255);
+  }
+  91%{
+    background-color: rgb(255,0,127);
+  }
+}

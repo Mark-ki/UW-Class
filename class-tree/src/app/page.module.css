@@ -1,0 +1,66 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6rem;
+  min-height: 100vh;
+  padding-bottom: 0%;
+}
+
+
+
+.disclaimerP{
+  font-family:'Franklin Gothic Light';
+  font-size: 20px;
+  color: #080F0F;
+  text-align: center;
+  margin-top: 20%;
+  margin-bottom: 0;
+}
+
+.startButton {
+  font-family:'Franklin Gothic Medium';
+  font-size: 20px;
+  color: #e5ece9;
+  text-align: center;
+  padding: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: #ba1b1d;
+  border-radius: 30px;
+  border: 3px solid #080f0f;
+  cursor: pointer;
+  /* box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 1); */
+  transition: all 0.3s ease;
+  /* transition: box-shadow 0.3s ease; */
+}
+
+.startButton:hover {
+  /* transform: translateY(-5px); */
+  /* box-shadow: 1px 6px 2px 1px rgba(0, 0, 0, 1);; */
+  background-color: #d6d1cd;
+  color: #080f0f;
+  /* opacity: 0.5; */
+}
+
+.appWrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.title{
+  font-family: 'Franklin Gothic Medium';
+  margin-top: 20%;
+  font-size: 40px;
+}
+
+.buttonWrapper{
+  width: auto;
+  height: auto;
+}
