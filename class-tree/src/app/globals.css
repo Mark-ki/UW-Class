@@ -4,13 +4,13 @@ html, body{
 }
 
 body{
-  background-image: linear-gradient(to right, #d6d1cd, 2px, transparent 2px), linear-gradient(to bottom, #d6d1cd, 2px, transparent 2px);
-  background-size: 100px 100px;
+  /* background-image: linear-gradient(to right, #d6d1cd, 2px, transparent 2px), linear-gradient(to bottom, #d6d1cd, 2px, transparent 2px); */
+  /* background-size: 100px 100px; */
   overflow: hidden;
 }
 
 * {
-  cursor: none !important;
+  /* cursor: none !important; */
 }
 
 #cursor{
@@ -33,7 +33,7 @@ body{
 
 .effect{
   position: absolute;
-  z-index: 1000;
+  z-index: 1;
   background: #080f0f;
   pointer-events: none;
   border-radius: 50%;

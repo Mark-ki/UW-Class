@@ -2,8 +2,20 @@
 .Wrapper{
     position: absolute;
     overflow:hidden;
-    margin: 10%;
-    height: 300px;
-    width: 1000px;
+    margin: 3%;
+    margin-top: 7%;
+    height: 100%;
+    width: 100%;
     font: 300 30px 'Franklin Gothic Medium';
+}
+
+.canvas{
+    width: 300px;
+    height: 300px;
+    border-radius: 30px;
+    border: 3px solid #080f0f;
+}
+
+.label{
+    width: fit-content;
 }

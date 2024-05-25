@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Sidenav from './ui/sidenav'
 import './utils/mouseEffect';
-import MouseEffect from './utils/mouseEffect';
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} style={{ backgroundColor: '#e5ece9' }}>
-        <MouseEffect></MouseEffect>
         <Sidenav/>
         <div className="main-content">
           {children}

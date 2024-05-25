@@ -1,10 +1,12 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import Link from 'next/link';
+import MouseEffect from './utils/mouseEffect';
 
 export default function Home() {
   return (
     <main className={styles.main}>
+      <MouseEffect></MouseEffect>
       <div className={styles.appWrapper}>
         <h1 className={styles.title}>
           Plan out your classes

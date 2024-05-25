@@ -6,6 +6,9 @@
   padding: 6rem;
   min-height: 100vh;
   padding-bottom: 0%;
+  background-image: linear-gradient(to right, #d6d1cd, 2px, transparent 2px), linear-gradient(to bottom, #d6d1cd, 2px, transparent 2px);
+  background-size: 100px 100px;
+  cursor: none;
 }
 
 
