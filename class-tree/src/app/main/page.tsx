@@ -60,10 +60,10 @@ export default function Page() {
                         this.text = new fabric.Text(collegeClass.name, { 
                             left: 10,
                             top: 10,
-                            fill: 'rgba(255, 150, 150, 1)' // Change the color to blue
+                            fill: 'rgba(255, 255, 255, 1)' // Change the color to blue
                         });
                         this.rect = new fabric.Rect({
-                            fill: 'rgba(200, 20, 20, 1)',
+                            fill: 'rgba(165, 0, 33, 1)',
                             left: 0,
                             top: 0,
                             width: this.width,
@@ -89,11 +89,32 @@ export default function Page() {
 
 
 
-                        // this.group.on('moving', (e) => {
-                        //     for(var i = 0; i < collegeClass.prereq.length; i++){
-                        //         this.lines[i].set({ y1: this.group.top + 50, x1: this.group.left + 100 });
-                        //     }
-                        // });
+                        this.group.on('moving', (e) => {
+                            // for(var i = 0; i < collegeClass.prereq.length; i++){
+                            //     this.lines[i].set({ y1: this.group.top + 50, x1: this.group.left + 100 });
+                            // }
+                            this.rect.set({ fill: 'rgba(153, 0, 31, 1)' });
+                            if(!this.isMoving){
+                                this.group.set({
+                                    scaleX: this.group.scaleX * 1.1,
+                                    scaleY: this.group.scaleY * 1.1
+                                });
+                            }
+                            this.isMoving = true;
+
+                        });
+
+                        fabricCanvas.on('mouse:up',  (event) => {
+                            if(this.isMoving){
+                                this.rect.set({ fill: 'rgba(165, 0, 33, 1)' });
+                                // this.group.set({ opacity: 1 });
+                                this.isMoving = false;
+                                this.group.set({
+                                    scaleX: this.group.scaleX * 1/1.1,
+                                    scaleY: this.group.scaleY * 1/1.1
+                                });
+                            } 
+                        });
 
                         // if(this.collegeClass.box != null){
                         //     this.childBox = this.collegeClass.box.group
@@ -182,6 +203,10 @@ export default function Page() {
         <div className={styles.Wrapper}>
             {/* <p className={styles.label}>This is the main page.</p> */}
             <canvas className={styles.canvas} ref={canvasRef} id="myCanvas"></canvas>
+            <div className='w-24 h-full bg-red-500'>
+
+            </div>
         </div>
+        
     );
   }

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const SideNav = () => {
     return (
-        <div className={styles.sideNavContainer}>
+        <div className={styles.sideNavContainer + " bg-gradient-to-r from-red-800 via-red-700 to-red-600"}>
             <nav className={styles.sideNavWrapper}>
                 <div className={styles.homeContainer}><div className={styles.homeWrapper}><Link className={styles.sideNavButtons} href="/">Home</Link></div></div>
                 <div className={styles.aboutContainer}><div className={styles.aboutWrapper}><Link className={styles.sideNavButtons} href="about">About</Link></div></div>

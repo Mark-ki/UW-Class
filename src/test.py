@@ -96,7 +96,7 @@ counter = 0
 courses = []
 
 # for i in range(len(itemList)):
-for i in range(2):
+for i in range(5):
     # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'atozindex')))
     driver.get(website)
 
