@@ -19,6 +19,8 @@ class collegeClass {
     }
 }
 
+fabric.Line.prototype.evented = false; // Make lines non-interactive
+fabric.Triangle.prototype.evented = false; // Make arrowheads non-interactive
 var prereqLine = fabric.util.createClass({
     initialize: function(start: Group, end: Group) {
         this.start = start;
@@ -29,10 +31,13 @@ var prereqLine = fabric.util.createClass({
             strokeWidth: 2,
             selectable: false
         });
-
+        this.line.set({
+            strokeDashArray: [5, 5], // Dashed line for a modern look
+            stroke: 'rgba(50, 50, 50, 0.8)', // Softer stroke color
+        });
         this.arrowHead = new fabric.Triangle({
-            width: 10,
-            height: 15,
+            width: 20,
+            height: 30,
             fill: 'rgba(0, 0, 0, 1)',
             strokeWidth: 2,
             selectable: false,
@@ -43,12 +48,15 @@ var prereqLine = fabric.util.createClass({
         this.updateArrow();
 
         this.start.on('moving', () => {
-            this.line.set({ y1: this.start.top + 50, x1: this.start.left + 100 });
+            this.line.set({ y1: this.start.top, x1: this.start.left });
             this.updateArrow();
         });
-
+        
         this.end.on('moving', () => {
-            this.line.set({ y2: this.end.top + 50, x2: this.end.left + 100 });
+            this.line.set({
+                y2: this.end.top,
+                x2: this.end.left
+            });
             this.updateArrow();
         });
     },
@@ -58,12 +66,18 @@ var prereqLine = fabric.util.createClass({
         const x2 = this.line.x2 || 0;
         const y2 = this.line.y2 || 0;
 
-        const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const retractDistance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2) / 2;
+
+        const retractedX = x2 - retractDistance * Math.cos(angle);
+        const retractedY = y2 - retractDistance * Math.sin(angle);
+
         this.arrowHead.set({
-            left: x2,
-            top: y2,
-            angle: angle + 90
+            left: retractedX,
+            top: retractedY,
+            angle: angle * (180 / Math.PI) + 90
         });
+        this.arrowHead.setCoords(); // Ensure the arrowhead's position is updated
     }
 });
 
@@ -74,43 +88,42 @@ var classBox = fabric.util.createClass({
         this.height = boxHeight;
         this.fill = 'rgb(100, 20, 20, 1)';
         this.text = new fabric.Text(collegeClass.name, { 
-            left: 25,
-            top: 25,
-            fill: 'rgba(255, 255, 255, 1)' // Change the color to blue
+            left: 20,
+            top: 20,
+            fill: 'rgba(255, 255, 255, 1)', // White text for better contrast
+            fontSize: 16,
+            fontWeight: 'bold',
+            fontFamily: 'Arial, sans-serif'
+        });
+        this.description = new fabric.Text(collegeClass.description, {
+            left: 20,
+            top: 50,
+            fill: 'rgba(255, 255, 255, 0.8)', // Slightly transparent white for description
+            fontSize: 12,
+            fontFamily: 'Arial, sans-serif'
         });
         this.rect = new fabric.Rect({
-            fill: 'rgba(165, 0, 33, 1)',
+            fill: 'rgb(181, 0, 0)', // Modern blue color
             width: this.width,
             height: this.height,
-            rx: 5,
-            ry: 5,
+            rx: 10, // Rounded corners
+            ry: 10,
             shadow: new fabric.Shadow({
-                color: 'rgba(0, 0, 0, 0.3)',
-                blur: 10,
+                color: 'rgba(0, 0, 0, 0.2)', // Subtle shadow
+                blur: 15,
                 offsetX: 5,
                 offsetY: 5
             }),
-            stroke: 'rgba(255, 255, 255, 0.5)',
-            strokeWidth: 1,
+            stroke: 'rgba(255, 255, 255, 0.6)', // Softer white stroke
+            strokeWidth: 2,
         });
 
-        this.arrowTarget = new fabric.Circle({
-            radius: 5,
-            fill: 'rgba(0, 0, 0, 0)', // Transparent fill
-            stroke: 'rgba(0, 0, 0, 0.5)', // Slightly visible border
-            strokeWidth: 1,
-            left: this.width / 2 - 5,
-            top: this.height - 5,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            evented: false
-        });
-
-        this.group = new fabric.Group([ this.rect, this.text, this.arrowTarget ], {
+        this.group = new fabric.Group([ this.rect, this.text, this.description ], {
             left: 0,
             top: 0,
-            hasControls: false
+            hasControls: false,
+            originX: 'center',
+            originY: 'center',
         });
 
         collegeClass.box = this.group;
@@ -124,27 +137,30 @@ var classBox = fabric.util.createClass({
         }
 
         this.group.on('moving', (e) => {
-            this.rect.set({ fill: 'rgb(153, 0, 31)' });
+            this.rect.set({ fill: 'rgb(199, 0, 0)' }); // Darker blue while moving
             if(!this.isMoving){
-                this.group.set({
-                    scaleX: this.group.scaleX * 1.1,
-                    scaleY: this.group.scaleY * 1.1
-                });
+                if (!this.rotationInterval) {
+                    this.rotationInterval = setInterval(() => {
+                        const currentAngle = this.group.angle || 0;
+                        const targetAngle = this.isRotatingBack ? -3 : 3;
+                        this.group.rotate(targetAngle);
+                        this.isRotatingBack = !this.isRotatingBack;
+                        this.group.setCoords(); // Ensure coordinates update
+                    }, 100); // Rotate every 500ms
+                }
             }
             this.isMoving = true;
 
-            this.group.on('moving', () => {
-                this.group.setCoords(); // Ensure coordinates update
-            });
+            this.group.setCoords(); // Ensure coordinates update
         });
         
-        this.group.on('mouse:up',  (e) => {
+        this.group.on('mouseup',  (e) => {
             if(this.isMoving){
                 this.isMoving = false;
-                this.group.set({
-                    scaleX: this.group.scaleX * 1/1.1,
-                    scaleY: this.group.scaleY * 1/1.1
-                });
+                clearInterval(this.rotationInterval); // Clear the rotation interval
+                this.rotationInterval = null; // Reset the interval reference
+                this.group.rotate(0); // Reset rotation to 0
+                this.rect.set({ fill: 'rgb(181, 0, 0)' }); // Reset to original color
             } 
         });
     }
@@ -271,18 +287,40 @@ export default function Page() {
                         <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
                             <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 300 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 400 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">Math 354 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 577 - This is a class.</li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
+                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        </li>
+                        
                     </ul>
                 </div>
             </div>
