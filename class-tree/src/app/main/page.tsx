@@ -7,6 +7,13 @@ import { Group } from 'fabric/fabric-impl';
 const boxWidth = 200;
 const boxHeight = 100;
 
+var activeClasses: collegeClass[] = [];
+
+// Extend fabric.Group to include the collegeClass property
+interface CustomGroup extends fabric.Group {
+    collegeClass?: collegeClass;
+}
+
 class collegeClass {
     name: string;
     description: string;
@@ -119,8 +126,8 @@ var classBox = fabric.util.createClass({
         });
 
         this.group = new fabric.Group([ this.rect, this.text, this.description ], {
-            left: 0,
-            top: 0,
+            left: Math.random() * (1000 - 300) + 300,
+            top: Math.random() * (500 - 300) + 300,
             hasControls: false,
             originX: 'center',
             originY: 'center',
@@ -134,6 +141,8 @@ var classBox = fabric.util.createClass({
             this.lines.push(new prereqLine(this.group, collegeClass.prereq[i].box || new fabric.Group()));
             fabricCanvas.add(this.lines[i].line);
             fabricCanvas.add(this.lines[i].arrowHead);
+            this.lines[i].line.sendToBack();
+            this.lines[i].arrowHead.sendToBack();
         }
 
         this.group.on('moving', (e) => {
@@ -247,27 +256,47 @@ export default function Page() {
         
     }, []);
 
-    const addObject = () => {
+    const addObject = (name:string , req?:string[]) => {
         const fabricCanvas = fabricCanvasRef.current;
         if(!fabricCanvas){
             return;
         }
-        
+
         // var cs577 = new classBox(new collegeClass("CS 577", "This is a class.") , fabricCanvas);
         // fabricCanvas.add(cs577.group);
 
 
-        var cs200 = new classBox(new collegeClass("CS 200", "This is a class."), fabricCanvas);
-        var cs300 = new classBox(new collegeClass("CS 300", "This is a class.", [cs200.collegeClass]), fabricCanvas);
-        var cs400 = new classBox(new collegeClass("CS 400", "This is a class.", [cs300.collegeClass]), fabricCanvas);
-        var math354 = new classBox(new collegeClass("Math 354", "This is a class.", [cs400.collegeClass]), fabricCanvas);
-        var cs577 = new classBox(new collegeClass("CS 577", "This is a class.", [cs400.collegeClass, math354.collegeClass]), fabricCanvas);
-        fabricCanvas.add(cs300.group);
+        // var cs200 = new classBox(new collegeClass("CS 200", "This is a class."), fabricCanvas);
+        // var cs300 = new classBox(new collegeClass("CS 300", "This is a class.", [cs200.collegeClass]), fabricCanvas);
+        // var cs400 = new classBox(new collegeClass("CS 400", "This is a class.", [cs300.collegeClass]), fabricCanvas);
+        // var math354 = new classBox(new collegeClass("Math 354", "This is a class.", [cs400.collegeClass]), fabricCanvas);
+        // var cs577 = new classBox(new collegeClass("CS 577", "This is a class.", [cs400.collegeClass, math354.collegeClass]), fabricCanvas);
+        // fabricCanvas.add(cs300.group);
         // fabricCanvas.renderAll()
-        fabricCanvas.add(cs400.group);
-        fabricCanvas.add(math354.group);
-        fabricCanvas.add(cs200.group);
-        fabricCanvas.add(cs577.group);
+        // fabricCanvas.add(cs400.group);
+        // fabricCanvas.add(math354.group);
+            
+        // fabricCanvas.add(cs577.group);
+
+        if(activeClasses.find((cls) => cls.name === name)){
+            return;
+        }
+
+        var requiredClasses: collegeClass[] = [];
+        if (req) {
+            for (cls of activeClasses) {
+                console.log(cls.name, req)
+                if(req.includes(cls.name)){ 
+                    requiredClasses.push(cls);
+                }
+            }
+        }   
+
+        var cls = new classBox(new collegeClass(name, "This is a class.", requiredClasses), fabricCanvas);
+        fabricCanvas.add(cls.group);
+        activeClasses.push(cls.collegeClass); 
+
+
     }
 
     return (
@@ -285,40 +314,34 @@ export default function Page() {
                 <div className='w-full h-4/5 overflow-y-auto'>
                     <ul className="p-4">
                         <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                            <button onClick={() => addObject("CS200")} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">CS 300 - This is a class.
+                            <button onClick={() => addObject("CS300", ["CS200"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">CS 400 - This is a class.
+                            <button onClick={() => addObject("CS400", ["CS300"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">Math 354 - This is a class.
+                            <button onClick={() => addObject("Math354", ["CS400"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">CS 500 - This is a class.
+                            <button onClick={() => addObject("CS500", ["Math354", "CS400"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">CS 600 - This is a class.
+                            <button onClick={() => addObject("CS600")} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">Math 101 - This is a class.
+                            <button onClick={() => addObject("Math101")} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">Physics 201 - This is a class.
+                            <button onClick={() => addObject("Physics201", ["Math101"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">Chemistry 301 - This is a class.
+                            <button onClick={() => addObject("Chemistry301", ["Physics201"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={addObject} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
+                        <li className="buttons p-2 border-b border-gray-300">Biology 401 - This is a class.
+                            <button onClick={() => addObject("Biology401", ["Chemistry301"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
                         </li>
                         
                     </ul>
