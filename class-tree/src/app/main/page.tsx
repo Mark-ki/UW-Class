@@ -7,18 +7,14 @@ import { Group } from 'fabric/fabric-impl';
 const boxWidth = 200;
 const boxHeight = 100;
 
-var activeClasses: collegeClass[] = [];
-
-// Extend fabric.Group to include the collegeClass property
-interface CustomGroup extends fabric.Group {
-    collegeClass?: collegeClass;
-}
+let activeClasses: collegeClass[] = [];
 
 class collegeClass {
     name: string;
     description: string;
     prereq: collegeClass[];
     box: Group | null = null;
+    boxData: any = null;
     constructor(name: string, description: string, prereq?: collegeClass[]) {
         this.name = name;
         this.description = description;
@@ -28,7 +24,7 @@ class collegeClass {
 
 fabric.Line.prototype.evented = false; // Make lines non-interactive
 fabric.Triangle.prototype.evented = false; // Make arrowheads non-interactive
-var prereqLine = fabric.util.createClass({
+let prereqLine = fabric.util.createClass({
     initialize: function(start: Group, end: Group) {
         this.start = start;
         this.end = end;
@@ -88,12 +84,14 @@ var prereqLine = fabric.util.createClass({
     }
 });
 
-var classBox = fabric.util.createClass({
+let classBox = fabric.util.createClass({
     initialize: function(collegeClass: collegeClass, fabricCanvas: fabric.Canvas) {
         this.collegeClass = collegeClass;
         this.width = boxWidth;
         this.height = boxHeight;
         this.fill = 'rgb(100, 20, 20, 1)';
+        this.lines = [] as InstanceType<typeof prereqLine>[];
+        this.linesIn = [] as InstanceType<typeof prereqLine>[];
         this.text = new fabric.Text(collegeClass.name, { 
             left: 20,
             top: 20,
@@ -134,18 +132,29 @@ var classBox = fabric.util.createClass({
         });
 
         collegeClass.box = this.group;
-        this.lines = [];
+        collegeClass.boxData = this;
+        
 
-        for(var i = 0; i < collegeClass.prereq.length; i++){
-            console.log(collegeClass.prereq[0]);
-            this.lines.push(new prereqLine(this.group, collegeClass.prereq[i].box || new fabric.Group()));
-            fabricCanvas.add(this.lines[i].line);
-            fabricCanvas.add(this.lines[i].arrowHead);
-            this.lines[i].line.sendToBack();
-            this.lines[i].arrowHead.sendToBack();
+        for(let i = 0; i < collegeClass.prereq.length; i++){
+            // console.log(collegeClass.prereq[0]);
+            let curr = new prereqLine(this.group, collegeClass.prereq[i].box || new fabric.Group());
+            this.lines.push(curr);
+            collegeClass.prereq[i].boxData?.linesIn?.push(curr);
+            // console.log((collegeClass.prereq[i].box?.lines));
+            // (collegeClass.prereq[i].box as CustomGroup).lines?.push(curr);
+            // fabricCanvas.add(this.lines[i].line);
+            // fabricCanvas.add(this.lines[i].arrowHead);
+            fabricCanvas.add(curr.line);
+            fabricCanvas.add(curr.arrowHead);
+
+            // this.lines[i].line.sendToBack();
+            // this.lines[i].arrowHead.sendToBack();
+
+            curr.line.sendToBack();
+            curr.arrowHead.sendToBack();
         }
 
-        this.group.on('moving', (e) => {
+        this.group.on('moving', (e: any) => {
             this.rect.set({ fill: 'rgb(199, 0, 0)' }); // Darker blue while moving
             if(!this.isMoving){
                 if (!this.rotationInterval) {
@@ -163,7 +172,7 @@ var classBox = fabric.util.createClass({
             this.group.setCoords(); // Ensure coordinates update
         });
         
-        this.group.on('mouseup',  (e) => {
+        this.group.on('mouseup',  (e: any) => {
             if(this.isMoving){
                 this.isMoving = false;
                 clearInterval(this.rotationInterval); // Clear the rotation interval
@@ -171,6 +180,21 @@ var classBox = fabric.util.createClass({
                 this.group.rotate(0); // Reset rotation to 0
                 this.rect.set({ fill: 'rgb(181, 0, 0)' }); // Reset to original color
             } 
+        });
+
+        this.group.on("mousedblclick", (e: any) => {
+            console.log(this.lines)
+            fabricCanvas.remove(this.group);
+            this.lines.forEach((line: { line: fabric.Object; arrowHead: fabric.Object; }) => {
+                fabricCanvas.remove(line.line);
+                fabricCanvas.remove(line.arrowHead);
+            });
+
+            this.linesIn.forEach((line: { line: fabric.Object; arrowHead: fabric.Object; }) => {
+                fabricCanvas.remove(line.line);
+                fabricCanvas.remove(line.arrowHead);
+            });
+            activeClasses = activeClasses.filter(cls => cls !== this.collegeClass);
         });
     }
 });
@@ -196,8 +220,8 @@ export default function Page() {
                 fabricCanvasRef.current = fabricCanvas;
                 
                 fabricCanvas.on('mouse:wheel', function(opt) {
-                    var delta = opt.e.deltaY;
-                    var zoom = fabricCanvas.getZoom();
+                    let delta = opt.e.deltaY;
+                    let zoom = fabricCanvas.getZoom();
                     zoom *= 0.999 ** delta;
                     if (zoom > 20) zoom = 20;
                     if (zoom < 0.01) zoom = 0.01;
@@ -207,16 +231,16 @@ export default function Page() {
                 })
 
 
-                var isDragging = false;
-                var selection = false;
-                var lastPosX = 0;
-                var lastPosY = 0;
-                var vpt = fabricCanvas.viewportTransform;
+                let isDragging = false;
+                let selection = false;
+                let lastPosX = 0;
+                let lastPosY = 0;
+                let vpt = fabricCanvas.viewportTransform;
 
                 fabricCanvas.on('mouse:down', function(opt) {
-                    console.log(opt.target);
+                    // console.log(opt.target);
                     if(opt.target) return;
-                    var evt = opt.e;
+                    let evt = opt.e;
                     isDragging = true;
                     selection = false;
                     lastPosX = evt.clientX;
@@ -225,8 +249,8 @@ export default function Page() {
 
                 fabricCanvas.on('mouse:move', function(opt) {
                     if (isDragging) {
-                        var e = opt.e;
-                        var vpt = fabricCanvas.viewportTransform;
+                        let e = opt.e;
+                        let vpt = fabricCanvas.viewportTransform;
 
                         if(vpt == null) return;
 
@@ -248,6 +272,7 @@ export default function Page() {
                     isDragging = false;
                     selection = true;
                 });
+
                       
 
             }
@@ -262,37 +287,21 @@ export default function Page() {
             return;
         }
 
-        // var cs577 = new classBox(new collegeClass("CS 577", "This is a class.") , fabricCanvas);
-        // fabricCanvas.add(cs577.group);
-
-
-        // var cs200 = new classBox(new collegeClass("CS 200", "This is a class."), fabricCanvas);
-        // var cs300 = new classBox(new collegeClass("CS 300", "This is a class.", [cs200.collegeClass]), fabricCanvas);
-        // var cs400 = new classBox(new collegeClass("CS 400", "This is a class.", [cs300.collegeClass]), fabricCanvas);
-        // var math354 = new classBox(new collegeClass("Math 354", "This is a class.", [cs400.collegeClass]), fabricCanvas);
-        // var cs577 = new classBox(new collegeClass("CS 577", "This is a class.", [cs400.collegeClass, math354.collegeClass]), fabricCanvas);
-        // fabricCanvas.add(cs300.group);
-        // fabricCanvas.renderAll()
-        // fabricCanvas.add(cs400.group);
-        // fabricCanvas.add(math354.group);
-            
-        // fabricCanvas.add(cs577.group);
-
         if(activeClasses.find((cls) => cls.name === name)){
             return;
         }
 
-        var requiredClasses: collegeClass[] = [];
+        let requiredClasses: collegeClass[] = [];
         if (req) {
-            for (cls of activeClasses) {
-                console.log(cls.name, req)
+            for (let cls of activeClasses) {
+                // console.log(cls.name, req)
                 if(req.includes(cls.name)){ 
                     requiredClasses.push(cls);
                 }
             }
         }   
 
-        var cls = new classBox(new collegeClass(name, "This is a class.", requiredClasses), fabricCanvas);
+        let cls = new classBox(new collegeClass(name, "This is a class.", requiredClasses), fabricCanvas);
         fabricCanvas.add(cls.group);
         activeClasses.push(cls.collegeClass); 
 
