@@ -13,9 +13,11 @@ class collegeClass {
     name: string;
     description: string;
     prereq: collegeClass[];
+    uninitializedPrereq: string[] = [];
     box: Group | null = null;
     boxData: any = null;
-    constructor(name: string, description: string, prereq?: collegeClass[]) {
+    constructor(name: string, description: string, prereq?: collegeClass[], uninitializedPrereq?: string[]) {
+        this.uninitializedPrereq = uninitializedPrereq || [];
         this.name = name;
         this.description = description;
         this.prereq = prereq || [];
@@ -25,7 +27,8 @@ class collegeClass {
 fabric.Line.prototype.evented = false; // Make lines non-interactive
 fabric.Triangle.prototype.evented = false; // Make arrowheads non-interactive
 let prereqLine = fabric.util.createClass({
-    initialize: function(start: Group, end: Group) {
+    initialize: function(start: Group, end: Group, startData: collegeClass) {
+        this.startData = startData;
         this.start = start;
         this.end = end;
 
@@ -92,14 +95,14 @@ let classBox = fabric.util.createClass({
         this.fill = 'rgb(100, 20, 20, 1)';
         this.lines = [] as InstanceType<typeof prereqLine>[];
         this.linesIn = [] as InstanceType<typeof prereqLine>[];
-        this.text = new fabric.Text(collegeClass.name, { 
+        this.text = new fabric.Textbox(collegeClass.name, { 
             left: 20,
             top: 20,
             fill: 'rgba(255, 255, 255, 1)', // White text for better contrast
             fontSize: 16,
             fontWeight: 'bold',
             fontFamily: 'Arial, sans-serif'
-        });
+       });
         this.description = new fabric.Text(collegeClass.description, {
             left: 20,
             top: 50,
@@ -137,7 +140,7 @@ let classBox = fabric.util.createClass({
 
         for(let i = 0; i < collegeClass.prereq.length; i++){
             // console.log(collegeClass.prereq[0]);
-            let curr = new prereqLine(this.group, collegeClass.prereq[i].box || new fabric.Group());
+            let curr = new prereqLine(this.group, collegeClass.prereq[i].box || new fabric.Group(), this.collegeClass);
             this.lines.push(curr);
             collegeClass.prereq[i].boxData?.linesIn?.push(curr);
             // console.log((collegeClass.prereq[i].box?.lines));
@@ -152,6 +155,23 @@ let classBox = fabric.util.createClass({
 
             curr.line.sendToBack();
             curr.arrowHead.sendToBack();
+        }
+
+        for (let cls of activeClasses) {
+            // cls.prereq.forEach((prereq: collegeClass) => {console.log(prereq.name)});
+            if (cls.uninitializedPrereq.includes(collegeClass.name)) {
+                // console.log(cls.name)
+                cls.uninitializedPrereq = cls.uninitializedPrereq.filter((name: string) => name !== collegeClass.name);
+                cls.prereq.push(collegeClass);
+                let curr = new prereqLine(cls.box || new fabric.Group(), this.group, cls);
+                this.linesIn.push(curr);
+                cls.boxData?.lines.push(curr);
+                fabricCanvas.add(curr.line);
+                fabricCanvas.add(curr.arrowHead);
+
+                curr.line.sendToBack();
+                curr.arrowHead.sendToBack();
+            }
         }
 
         this.group.on('moving', (e: any) => {
@@ -183,18 +203,19 @@ let classBox = fabric.util.createClass({
         });
 
         this.group.on("mousedblclick", (e: any) => {
-            console.log(this.lines)
             fabricCanvas.remove(this.group);
             this.lines.forEach((line: { line: fabric.Object; arrowHead: fabric.Object; }) => {
                 fabricCanvas.remove(line.line);
                 fabricCanvas.remove(line.arrowHead);
             });
 
-            this.linesIn.forEach((line: { line: fabric.Object; arrowHead: fabric.Object; }) => {
+            this.linesIn.forEach((line: { line: fabric.Object; arrowHead: fabric.Object; startData: collegeClass }) => {
                 fabricCanvas.remove(line.line);
                 fabricCanvas.remove(line.arrowHead);
+                line.startData.uninitializedPrereq.push(this.collegeClass.name);
             });
             activeClasses = activeClasses.filter(cls => cls !== this.collegeClass);
+
         });
     }
 });
@@ -202,10 +223,8 @@ let classBox = fabric.util.createClass({
 export default function Page() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
-    console.log("Page");
 
     useEffect(() => {
-        console.log("useEffect");
         const canvas = canvasRef.current;
         if (canvas) {
             const ctx = canvas.getContext('2d');
@@ -292,16 +311,20 @@ export default function Page() {
         }
 
         let requiredClasses: collegeClass[] = [];
+        let uninitializedClasses: string[] = [];
+        // Put required class that's not created yet in another array
         if (req) {
-            for (let cls of activeClasses) {
-                // console.log(cls.name, req)
-                if(req.includes(cls.name)){ 
-                    requiredClasses.push(cls);
-                }
+            for (let className of req) {
+            const existingClass = activeClasses.find(cls => cls.name === className);
+            if (existingClass) {
+                requiredClasses.push(existingClass);
+            } else {
+                uninitializedClasses.push(className);
             }
-        }   
+            }
+        }
 
-        let cls = new classBox(new collegeClass(name, "This is a class.", requiredClasses), fabricCanvas);
+        let cls = new classBox(new collegeClass(name, "This is a class.", requiredClasses, uninitializedClasses), fabricCanvas);
         fabricCanvas.add(cls.group);
         activeClasses.push(cls.collegeClass); 
 
