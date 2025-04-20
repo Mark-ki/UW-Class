@@ -1,6 +1,5 @@
 import React from "react";
 import Canvas from "./canvas";
-import noSsr from "../components/noSsr";
 import NoSsr from "../components/noSsr";
 
 export default function CanvasPage() {
