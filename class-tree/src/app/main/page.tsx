@@ -1,11 +1,11 @@
 import React from "react";
-import Canvas from "./canvas";
-import NoSsr from "../components/noSsr";
+import dynamic from 'next/dynamic';
+const Canvas = dynamic(() => import('./canvas'), { ssr: false });
 
 export default function CanvasPage() {
     return (
         <div className="canvasPage">
-        <NoSsr><Canvas></Canvas></NoSsr>
+        <Canvas></Canvas>
         </div>
     );
 }
