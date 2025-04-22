@@ -5,6 +5,7 @@ import { fabric } from 'fabric';
 import { Group } from 'fabric/fabric-impl';
 import ListItem from './listItem';
 import { useState } from 'react';
+import {classList} from './classList';
 
 const boxWidth = 200;
 const boxHeight = 100;
@@ -230,17 +231,7 @@ export default function Canvas() {
 
     useEffect(() => {
 
-        setClasses([{ name: "CS200" },
-            { name: "CS300", req: ["CS200"] },
-            { name: "CS400", req: ["CS300"] },
-            { name: "Math354", req: ["CS400"] },
-            { name: "CS500", req: ["Math354", "CS400"] },
-            { name: "CS600" },
-            { name: "Math101" },
-            { name: "Physics201", req: ["Math101"] },
-            { name: "Chemistry301", req: ["Physics201"] },
-            { name: "Biology401", req: ["Chemistry301"] },
-        ]);
+        setClasses(classList);
 
 
         const fetchClasses = async () => {
