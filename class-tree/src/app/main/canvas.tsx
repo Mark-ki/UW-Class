@@ -3,6 +3,8 @@ import React, { useRef, useEffect } from 'react';
 import styles from './styles.module.css';
 import { fabric } from 'fabric';
 import { Group } from 'fabric/fabric-impl';
+import ListItem from './listItem';
+import { useState } from 'react';
 
 const boxWidth = 200;
 const boxHeight = 100;
@@ -221,8 +223,38 @@ let classBox = fabric.util.createClass({
 });
 
 export default function Canvas() {
+    const [classes, setClasses] = React.useState<{ name: string; req?: string[] }[]>([]);
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
+
+    useEffect(() => {
+
+        setClasses([{ name: "CS200" },
+            { name: "CS300", req: ["CS200"] },
+            { name: "CS400", req: ["CS300"] },
+            { name: "Math354", req: ["CS400"] },
+            { name: "CS500", req: ["Math354", "CS400"] },
+            { name: "CS600" },
+            { name: "Math101" },
+            { name: "Physics201", req: ["Math101"] },
+            { name: "Chemistry301", req: ["Physics201"] },
+            { name: "Biology401", req: ["Chemistry301"] },
+        ]);
+
+
+        const fetchClasses = async () => {
+            try {
+                const response = await fetch('/api/classes'); // Replace with your API endpoint
+                const data = await response.json();
+                setClasses(data);
+            } catch (error) {
+                console.error('Error fetching classes:', error);
+            }
+        };
+    
+        fetchClasses();
+    }, []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -345,37 +377,14 @@ export default function Canvas() {
                 </div>
                 <div className='w-full h-4/5 overflow-y-auto'>
                     <ul className="p-4">
-                        <li className="buttons p-2 border-b border-gray-300">CS 200 - This is a class.
-                            <button onClick={() => addObject("CS200")} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 300 - This is a class.
-                            <button onClick={() => addObject("CS300", ["CS200"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 400 - This is a class.
-                            <button onClick={() => addObject("CS400", ["CS300"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">Math 354 - This is a class.
-                            <button onClick={() => addObject("Math354", ["CS400"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 500 - This is a class.
-                            <button onClick={() => addObject("CS500", ["Math354", "CS400"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">CS 600 - This is a class.
-                            <button onClick={() => addObject("CS600")} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">Math 101 - This is a class.
-                            <button onClick={() => addObject("Math101")} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">Physics 201 - This is a class.
-                            <button onClick={() => addObject("Physics201", ["Math101"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">Chemistry 301 - This is a class.
-                            <button onClick={() => addObject("Chemistry301", ["Physics201"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        <li className="buttons p-2 border-b border-gray-300">Biology 401 - This is a class.
-                            <button onClick={() => addObject("Biology401", ["Chemistry301"])} className="p-1 ml-2 bg-red-500 text-white rounded-md">Add</button>
-                        </li>
-                        
+                        {classes.map((cls, index) => (
+                            <ListItem
+                                key={index}
+                                addObject={addObject}
+                                name={cls.name}
+                                req={cls.req}
+                            />
+                        ))}
                     </ul>
                 </div>
             </div>
