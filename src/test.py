@@ -38,6 +38,17 @@ class Subject:
         not_open_pattern = re.compile(r'\bNot\sopen\sto\b.*?:')
         declared_pattern = re.compile(r'\bdeclared\sin\b.*?program\b')
 
+        
+        # Extract and remove the specific phrase from the sentence
+        # Remove the phrase "or concurrent enrollment" from the sentence
+        sentence = re.sub(r'\bor concurrent enrollment\b', '', sentence, flags=re.IGNORECASE)
+        specialNotes = None
+        declared_phrase_pattern = re.compile(r'(?:and graduate/professional standing|graduate/professional standing|declared in|or declared in|Not open to)\b.*?(?=\)|,|$)')
+        declared_phrase_match = declared_phrase_pattern.search(sentence)
+        if declared_phrase_match:
+            specialNotes = declared_phrase_match.group().strip()
+        sentence = declared_phrase_pattern.sub('', sentence)
+
         # Split by "or" when not part of parentheses
         split_by_or = re.split(r'\bor\b(?![^()]*\))(?!\s+[A-Z]+\s+\d+)', sentence)
         split_by_or = [part.split('.') for part in split_by_or]
@@ -49,7 +60,7 @@ class Subject:
 
         department_code_pattern = re.compile(r'(?!,|\s*and\s*|\s*or\s*|\s|nd\s|d\s|r\s)[\bA-Za-z\s\/\b]++(?=\d+)')
         departmentCode = department_code_pattern.findall(sentence)
-        departmentCode = [code.strip() for code in departmentCode]
+        departmentCode = list(set(code.strip() for code in departmentCode))
 
         class_code_pattern = re.compile(r'(?:, |or )(\d+)')
         # classCode = class_code_pattern.findall(sentence)
@@ -68,19 +79,29 @@ class Subject:
                 if(j.isdigit()):
                     curr = curr.replace(j, departmentCode[i] + " " + j)
                     # print(curr)
+
+            curr = curr.replace('(', '').replace(')', '')
             updatedCode += curr
+
+        # Clean up trailing spaces, commas, semicolons, or full stops in updatedCode
+        updatedCode = re.sub(r'[;,\.]\s*$', '', updatedCode).strip()
+
+        split_by_and = re.split(r'\band\b(?![^()]*\))(?!\s+[A-Z]+\s+\d+)', updatedCode)
+        print("Split by and: ", split_by_and)
 
     
         # Store the results in the Subject's attributes
         self.prereqs = split_by_period
 
-        print("\nCourse Name:", self.name)
-        print("Class Requisites:", self.prereqs)
-        # print("Other Requisites:", other_requisites)
-        print("Prereqs Text:", self.prereqsText)
-        print("Department Codes:", departmentCode)
-        # print("Class Codes:", classCode)
-        print("Class Codes:", updatedCode)
+        with open("output.txt", "a", encoding="utf-8") as file:
+            file.write("\nCourse Name: " + self.name + "\n")
+            file.write("Class Requisites: " + str(self.prereqs) + "\n")
+            # file.write("Other Requisites: " + str(other_requisites) + "\n")
+            file.write("Prereqs Text: " + self.prereqsText + "\n")
+            file.write("Department Codes: " + str(departmentCode) + "\n")
+            # file.write("Class Codes: " + str(classCode) + "\n")
+            file.write("Notes: " + str(specialNotes) + "\n")
+            file.write("Class Codes: " + updatedCode + "\n")
 
 
 website = 'https://guide.wisc.edu/courses'
@@ -96,7 +117,7 @@ counter = 0
 courses = []
 
 # for i in range(len(itemList)):
-for i in range(5):
+for i in range(1):
     # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'atozindex')))
     driver.get(website)
 

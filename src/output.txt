@@ -1,0 +1,252 @@
+
+Course Name: ACCT I S 100
+Class Requisites: ['']
+Prereqs Text: Not open to students with credit for ACCT I S 300
+Department Codes: []
+Notes: Not open to students with credit for ACCT I S 300
+Class Codes: 
+
+Course Name: ACCT I S 211
+Class Requisites: ['ACCT I S 100 ']
+Prereqs Text: ACCT I S 100 or declared in undergraduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in undergraduate Business Exchange program
+Class Codes: ACCT I S 100
+
+Course Name: ACCT I S 300
+Class Requisites: ['Satisfied Quantitative Reasoning (QR) A requirement', ' ']
+Prereqs Text: Satisfied Quantitative Reasoning (QR) A requirement. Not open to students with credit for ACCT I S 100.
+Department Codes: []
+Notes: Not open to students with credit for ACCT I S 100.
+Class Codes: 
+
+Course Name: ACCT I S 301
+Class Requisites: ['ACCT I S 100 ']
+Prereqs Text: ACCT I S 100 or declared in undergraduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in undergraduate Business Exchange program
+Class Codes: ACCT I S 100
+
+Course Name: ACCT I S 302
+Class Requisites: ['ACCT I S 301 ']
+Prereqs Text: ACCT I S 301 or declared in undergraduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in undergraduate Business Exchange program
+Class Codes: ACCT I S 301
+
+Course Name: ACCT I S 310
+Class Requisites: ['ACCT I S 211 ']
+Prereqs Text: ACCT I S 211 or declared in undergraduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in undergraduate Business Exchange program
+Class Codes: ACCT I S 211
+
+Course Name: ACCT I S 329
+Class Requisites: ['ACCT I S 100, 300, or LAW 811', ' ']
+Prereqs Text: ACCT I S 100, 300, or LAW 811. Not open to students declared in Business: Accounting BBA program
+Department Codes: ['ACCT I S', 'LAW']
+Notes: Not open to students declared in Business: Accounting BBA program
+Class Codes: ACCT I S 100, ACCT I S 300, or LAW 811
+
+Course Name: ACCT I S 340
+Class Requisites: ['ACCT I S 211 and (ACCT I S 301 ); ']
+Prereqs Text: ACCT I S 211 and (ACCT I S 301 or concurrent enrollment); or declared in undergraduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in undergraduate Business Exchange program
+Class Codes: ACCT I S 211 and ACCT I S 301
+
+Course Name: ACCT I S 399
+Class Requisites: ['Consent of instructor']
+Prereqs Text: Consent of instructor
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 401
+Class Requisites: ['None']
+Prereqs Text: None
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 406
+Class Requisites: ['ACCT I S 302, 702, , ', ' the Business Exchange program']
+Prereqs Text: ACCT I S 302, 702, declared in Business: Accounting and Business Analysis MSB, or the Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: declared in Business: Accounting and Business Analysis MSB
+Class Codes: ACCT I S 302, ACCT I S 702, , or the Business Exchange program
+
+Course Name: ACCT I S 600
+Class Requisites: ['None']
+Prereqs Text: None
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 601
+Class Requisites: ['None']
+Prereqs Text: None
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 603
+Class Requisites: ['ACCT I S 302 ', ' 702']
+Prereqs Text: ACCT I S 302 or 702
+Department Codes: ['ACCT I S']
+Notes: None
+Class Codes: ACCT I S 302 or ACCT I S 702
+
+Course Name: ACCT I S 620
+Class Requisites: ['ACCT I S 301  ']
+Prereqs Text: ACCT I S 301 or concurrent enrollment or declared in undergraduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in undergraduate Business Exchange program
+Class Codes: ACCT I S 301
+
+Course Name: ACCT I S 621
+Class Requisites: ['ACCT I S 620, , ']
+Prereqs Text: ACCT I S 620, declared in Business: Accounting and Business Analysis MSB, or declared in the Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: declared in Business: Accounting and Business Analysis MSB
+Class Codes: ACCT I S 620,
+
+Course Name: ACCT I S 630
+Class Requisites: ['ACCT I S 301, 701, ']
+Prereqs Text: ACCT I S 301, 701, or declared in the Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in the Business Exchange program
+Class Codes: ACCT I S 301, ACCT I S 701
+
+Course Name: ACCT I S 640
+Class Requisites: ['(ACCT I S 340 ), (ACCT I S 100 and GEN BUS 307 or 317), (ACCT I S 700 ), ']
+Prereqs Text: (ACCT I S 340 or concurrent enrollment), (ACCT I S 100 and GEN BUS 307 or 317), (ACCT I S 700 or concurrent enrollment), or declared in the Business Exchange program
+Department Codes: ['GEN BUS', 'ACCT I S']
+Notes: or declared in the Business Exchange program
+Class Codes: ACCT I S 340 , ACCT I S 100 and GEN BUS 307 or ACCT I S 317, ACCT I S 700
+
+Course Name: ACCT I S 700
+Class Requisites: ['Graduate/professional standing']
+Prereqs Text: Graduate/professional standing
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 701
+Class Requisites: ['ACCT I S 700']
+Prereqs Text: ACCT I S 700
+Department Codes: ['ACCT I S']
+Notes: None
+Class Codes: ACCT I S 700
+
+Course Name: ACCT I S 702
+Class Requisites: ['ACCT I S 701']
+Prereqs Text: ACCT I S 701
+Department Codes: ['ACCT I S']
+Notes: None
+Class Codes: ACCT I S 701
+
+Course Name: ACCT I S 710
+Class Requisites: ['ACCT I S 700']
+Prereqs Text: ACCT I S 700
+Department Codes: ['ACCT I S']
+Notes: None
+Class Codes: ACCT I S 700
+
+Course Name: ACCT I S 722
+Class Requisites: ['ACCT I S 620 , , ']
+Prereqs Text: ACCT I S 620 and graduate/professional standing, declared in Business: Accounting and Business Analysis MSB, or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: and graduate/professional standing
+Class Codes: ACCT I S 620 ,
+
+Course Name: ACCT I S 724
+Class Requisites: ['Graduate/professional standing and (ACCT I S 620 or LAW 742), , ']
+Prereqs Text: Graduate/professional standing and (ACCT I S 620 or LAW 742), declared in Business: Accounting and Business Analysis MSB, or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S', 'LAW']
+Notes: declared in Business: Accounting and Business Analysis MSB
+Class Codes: ACCT I S 620 or LAW 742,
+
+Course Name: ACCT I S 725
+Class Requisites: ['Graduate/professional standing and (ACCT I S 620 or LAW 742), , ']
+Prereqs Text: Graduate/professional standing and (ACCT I S 620 or LAW 742), declared in Business: Accounting and Business Analysis MSB, or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S', 'LAW']
+Notes: declared in Business: Accounting and Business Analysis MSB
+Class Codes: ACCT I S 620 or LAW 742,
+
+Course Name: ACCT I S 730
+Class Requisites: ['(Graduate/professional standing, ACCT I S 340, and 630), , ']
+Prereqs Text: (Graduate/professional standing, ACCT I S 340, and 630), declared in Business: Accounting and Business Analysis MSB, or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: declared in Business: Accounting and Business Analysis MSB
+Class Codes: ACCT I S 340, and 630,
+
+Course Name: ACCT I S 740
+Class Requisites: ['Graduate/professional standing ']
+Prereqs Text: Graduate/professional standing or declared in graduate Business Exchange program
+Department Codes: []
+Notes: or declared in graduate Business Exchange program
+Class Codes: 
+
+Course Name: ACCT I S 765
+Class Requisites: ['Graduate/professional standing ']
+Prereqs Text: Graduate/professional standing or declared in graduate Business Exchange program
+Department Codes: []
+Notes: or declared in graduate Business Exchange program
+Class Codes: 
+
+Course Name: ACCT I S 770
+Class Requisites: ['Graduate/professional standing and (ACCT I S 302 or 702); ']
+Prereqs Text: Graduate/professional standing and (ACCT I S 302 or 702); or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in graduate Business Exchange program
+Class Codes: ACCT I S 302 or ACCT I S 702
+
+Course Name: ACCT I S 771
+Class Requisites: ['Graduate/professional standing and (ACCT I S 310 or 710), ']
+Prereqs Text: Graduate/professional standing and (ACCT I S 310 or 710), or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: or declared in graduate Business Exchange program
+Class Codes: ACCT I S 310 or ACCT I S 710
+
+Course Name: ACCT I S 772
+Class Requisites: ['(ACCT I S 620 ) ']
+Prereqs Text: (ACCT I S 620 and graduate/professional standing) or declared in graduate Business Exchange program
+Department Codes: ['ACCT I S']
+Notes: and graduate/professional standing
+Class Codes: ACCT I S 620
+
+Course Name: ACCT I S/E P D/GEN BUS  781
+Class Requisites: ['Graduate/professional standing', ' ']
+Prereqs Text: Graduate/professional standing. Not open to students declared in an MBA program
+Department Codes: []
+Notes: Not open to students declared in an MBA program
+Class Codes: 
+
+Course Name: ACCT I S 799
+Class Requisites: ['Consent of instructor']
+Prereqs Text: Consent of instructor
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 971
+Class Requisites: ['Declared in Business PHD']
+Prereqs Text: Declared in Business PHD
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 990
+Class Requisites: ['Consent of instructor']
+Prereqs Text: Consent of instructor
+Department Codes: []
+Notes: None
+Class Codes: 
+
+Course Name: ACCT I S 999
+Class Requisites: ['Declared in Business PHD']
+Prereqs Text: Declared in Business PHD
+Department Codes: []
+Notes: None
+Class Codes: 

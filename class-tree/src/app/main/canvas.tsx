@@ -6,6 +6,17 @@ import { Group } from 'fabric/fabric-impl';
 import ListItem from './listItem';
 import { useState } from 'react';
 import {classList} from './classList';
+import {MongoClient, ServerApiVersion} from 'mongodb';
+
+const uri = "mongodb+srv://admin:1234@cluster0.rgueobc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+});
 
 const boxWidth = 200;
 const boxHeight = 100;
@@ -230,6 +241,18 @@ export default function Canvas() {
     const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
 
     useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/classes');
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+    
+        fetchData();
 
         setClasses(classList);
 
